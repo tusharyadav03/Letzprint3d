@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tap Studio — internal 3D production pipeline</title>
+<script src="https://unpkg.com/qrcode-generator@1.4.4/qrcode.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.164.1/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.164.1/examples/jsm/",
+    "three-mesh-bvh": "https://unpkg.com/three-mesh-bvh@0.7.6/build/index.module.js",
+    "three-bvh-csg": "https://unpkg.com/three-bvh-csg@0.0.16/build/index.module.js"
+  }
+}
+</script>
+<style>
+  :root{
+    --bg:#0d0f12; --panel:#14171c; --panel2:#1b1f26; --line:#272c35;
+    --tx:#e8eaee; --tx2:#8b94a3; --acc:#c9a227; --acc2:#2d5bd1; --ok:#3ecf8e; --warn:#e0803a;
+    --r:10px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    background:var(--bg); color:var(--tx); overflow:hidden;
+    font:13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  #app{display:grid;grid-template-columns:216px 1fr 320px;grid-template-rows:52px 1fr;height:100%}
+
+  header{
+    grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:0 16px;
+    background:var(--panel);border-bottom:1px solid var(--line);
+  }
+  .logo{font-weight:700;letter-spacing:.14em;font-size:11px;color:var(--acc);text-transform:uppercase}
+  .logo span{color:var(--tx2);margin-left:8px;letter-spacing:.04em;font-weight:500;text-transform:none}
+  header .sp{flex:1}
+  button,select,input[type=text],input[type=url]{
+    font:inherit;color:var(--tx);background:var(--panel2);
+    border:1px solid var(--line);border-radius:8px;padding:6px 11px;cursor:pointer;
+  }
+  button:hover{border-color:#3b424f;background:#20252d}
+  button.primary{background:var(--acc);color:#181400;border-color:var(--acc);font-weight:600}
+  button.primary:hover{background:#dcb42f}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  input[type=text],input[type=url]{cursor:text;width:100%}
+  input[type=text]:focus,input[type=url]:focus{outline:none;border-color:var(--acc2)}
+
+  aside{background:var(--panel);border-right:1px solid var(--line);overflow-y:auto;padding:10px 0}
+  .grp{padding:12px 14px 5px;font-size:10px;letter-spacing:.14em;color:var(--tx2);text-transform:uppercase}
+  .prod{display:flex;justify-content:space-between;align-items:center;gap:6px;
+    padding:7px 14px;cursor:pointer;border-left:2px solid transparent;color:var(--tx2)}
+  .prod:hover{background:var(--panel2);color:var(--tx)}
+  .prod.on{background:var(--panel2);border-left-color:var(--acc);color:var(--tx)}
+  .prod b{font-weight:500;font-size:12.5px}
+  .prod i{font-style:normal;font-size:10.5px;color:var(--tx2)}
+
+  main{position:relative;background:radial-gradient(ellipse at 50% 32%,#1a1f27 0%,#0d0f12 72%)}
+  canvas{display:block;width:100%;height:100%}
+  #hud{position:absolute;left:14px;bottom:12px;font-size:11px;color:var(--tx2);
+    background:rgba(13,15,18,.7);border:1px solid var(--line);border-radius:8px;padding:7px 11px;
+    backdrop-filter:blur(8px);white-space:pre;pointer-events:none}
+  #busy{position:absolute;inset:0;display:none;place-items:center;background:rgba(13,15,18,.66);
+    backdrop-filter:blur(3px);font-size:12px;color:var(--tx2);letter-spacing:.05em;z-index:5}
+  #busy.on{display:grid}
+  #vtools{position:absolute;right:12px;top:12px;display:flex;gap:6px}
+  #vtools button{padding:5px 9px;font-size:11px}
+
+  section.panel{background:var(--panel);border-left:1px solid var(--line);
+    overflow-y:auto;display:flex;flex-direction:column}
+  .tabs{display:flex;position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line);z-index:2}
+  .tab{flex:1;text-align:center;padding:11px 4px;font-size:11px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--tx2);cursor:pointer;border-bottom:2px solid transparent}
+  .tab:hover{color:var(--tx)}
+  .tab.on{color:var(--acc);border-bottom-color:var(--acc)}
+  .pane{display:none;padding:14px}
+  .pane.on{display:block}
+
+  .lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx2);
+    margin:16px 0 8px;display:block}
+  .lbl:first-child{margin-top:0}
+  .row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+  .row label{flex:1;font-size:12px;color:var(--tx2)}
+  .row input[type=range]{flex:1.35;accent-color:var(--acc);height:3px}
+  .row .num{width:56px;text-align:right;font-variant-numeric:tabular-nums;font-size:11.5px;color:var(--tx)}
+
+  .swatches{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;margin-bottom:6px}
+  .sw{aspect-ratio:1;border-radius:5px;border:1px solid rgba(255,255,255,.14);cursor:pointer}
+  .sw.on{outline:2px solid var(--acc);outline-offset:1px}
+  .colorRow{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .colorRow span{flex:1;font-size:12px;color:var(--tx2)}
+  .colorRow input[type=color]{width:34px;height:24px;padding:0;border-radius:6px;
+    border:1px solid var(--line);background:none;cursor:pointer}
+  /* Which row the palette swatches will write to. */
+  .colorRow{padding:3px 6px;margin-left:-6px;margin-right:-6px;border-radius:6px;
+    border:1px solid transparent;cursor:pointer}
+  .colorRow.sel{border-color:var(--acc);background:rgba(201,162,39,.07)}
+  .colorRow .inh{opacity:.5;font-style:normal}
+
+  .drop{border:1.5px dashed var(--line);border-radius:var(--r);padding:20px 12px;text-align:center;
+    color:var(--tx2);cursor:pointer;transition:.15s}
+  .drop:hover,.drop.hot{border-color:var(--acc);color:var(--tx);background:var(--panel2)}
+  .drop b{display:block;color:var(--tx);font-size:12.5px;margin-bottom:3px}
+  #logoPrev{margin-top:9px;display:none;background:#fff;border-radius:8px;padding:7px;text-align:center}
+  #logoPrev img,#logoPrev canvas{max-width:100%;max-height:88px;display:inline-block}
+
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+  .modes button{font-size:11.5px;padding:8px 4px;text-align:center}
+  .modes button.on{border-color:var(--acc);color:var(--acc);background:#241f0d}
+
+  .tile{background:var(--panel2);border:1px solid var(--line);border-radius:var(--r);
+    padding:10px;margin-bottom:8px}
+  .tile h4{margin:0 0 8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc)}
+  .tile select,.tile input{width:100%;margin-bottom:6px;font-size:12px}
+
+  .exp{display:grid;gap:6px;margin-bottom:14px}
+  .exp button{text-align:left;padding:10px 12px}
+  .exp button small{display:block;color:var(--tx2);font-size:10.5px;margin-top:2px}
+
+  .stat{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--line);font-size:12px}
+  .stat span:first-child{color:var(--tx2)}
+  .warnbox{background:#2a1d10;border:1px solid #513412;color:#e8b878;border-radius:8px;
+    padding:9px 11px;font-size:11.5px;margin-top:10px}
+  .okbox{background:#10241b;border:1px solid #1d4a35;color:#7fdcb0;border-radius:8px;
+    padding:9px 11px;font-size:11.5px;margin-top:10px}
+  .hint{font-size:11px;color:var(--tx2);margin-top:8px;line-height:1.5}
+  a{color:var(--acc)}
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-thumb{background:#272c35;border-radius:6px}
+  ::-webkit-scrollbar-track{background:transparent}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="logo">Tap Studio <span id="hTitle">production pipeline</span></div>
+    <div class="sp"></div>
+    <button id="btnPreset">Load preset</button>
+    <button id="btnSavePreset">Save preset</button>
+    <button class="primary" id="btnExportAll">Export print pack</button>
+  </header>
+
+  <aside id="rail"></aside>
+
+  <main>
+    <canvas id="cv"></canvas>
+    <div id="vtools">
+      <button data-view="iso">Iso</button>
+      <button data-view="front">Front</button>
+      <button data-view="top">Top</button>
+      <button data-view="back">Back</button>
+      <button id="btnExplode">Explode</button>
+    </div>
+    <div id="hud"></div>
+    <div id="busy">building geometry…</div>
+  </main>
+
+  <section class="panel">
+    <div class="tabs">
+      <div class="tab on" data-tab="design">Design</div>
+      <div class="tab" data-tab="dims">Dimensions</div>
+      <div class="tab" data-tab="tiles">Tiles</div>
+      <div class="tab" data-tab="export">Export</div>
+    </div>
+
+    <div class="pane on" data-pane="design">
+      <span class="lbl">Logo STL (mount an existing model)</span>
+      <div class="drop" id="dropStl">
+        <b>Drop logo STL here</b>
+        Made in Tinkercad, Blender, Fusion — anything
+      </div>
+      <input type="file" id="fileStl" accept=".stl" hidden>
+      <div class="hint" id="stlInfo">No STL loaded. Drop one and it overrides
+        every generated logo mode — scaled to millimetres, seated in a matching
+        recess, checked against your nozzle.</div>
+      <button id="btnClearStl" style="width:100%;margin-top:6px;display:none">Remove STL</button>
+
+      <span class="lbl">Printer</span>
+      <select id="nozzle">
+        <option value="0.4">0.4 mm nozzle — 0.8 mm detail floor</option>
+        <option value="0.2">0.2 mm nozzle — 0.4 mm detail floor</option>
+      </select>
+      <div class="hint">The floor is two extrusion widths: a feature needs a wall
+        on each side. This drives the relief sampling, the logo feature check and
+        the QR module check together.</div>
+
+      <span class="lbl">Strapline</span>
+      <input type="text" id="strapline" placeholder="TAP TO CONNECT">
+      <div class="hint">Embossed across the front of the tray, wrapped in the
+        <b>((( )))</b> wave brackets. Clear it to leave the face plain.</div>
+
+      <span class="lbl">Colours</span>
+      <div id="colors"></div>
+      <div class="swatches" id="swatches"></div>
+      <div class="hint" id="swHint">Pick a colour field above, then click a swatch.</div>
+    </div>
+
+    <div class="pane" data-pane="dims"></div>
+    <div class="pane" data-pane="tiles"></div>
+
+    <div class="pane" data-pane="export">
+      <span class="lbl">Downloads</span>
+      <div class="exp">
+        <button data-x="stl-all">STL — all printable parts<small>One file, every part in place</small></button>
+        <button data-x="stl-split">STL — one file per part<small>Body, tiles, inlays separately</small></button>
+        <button data-x="3mf">3MF — coloured, multi-object<small>Opens in Bambu / Prusa / Orca with colours assigned</small></button>
+        <button data-x="obj">OBJ<small>For Blender round-tripping</small></button>
+        <button data-x="sheet">Production sheet (.txt)<small>Parts, colours, NFC links, print settings</small></button>
+        <button data-x="preset">Preset (.json)<small>Reload this exact configuration later, or feed the CAD / Blender backends</small></button>
+        <button data-x="qr">QR artwork (.png)<small>2048 px, for the label or UV printer</small></button>
+      </div>
+      <label class="hint" style="display:flex;align-items:center;gap:8px;margin:-6px 0 12px">
+        <input type="checkbox" id="polish" checked>
+        Weld duplicate vertices before export (smaller files, fewer slicer warnings)
+      </label>
+      <span class="lbl">Model check</span>
+      <div id="check"></div>
+      <span class="lbl">Customer</span>
+      <input type="text" id="brand" placeholder="Customer / job name">
+      <input type="text" id="notes" placeholder="Job notes" style="margin-top:6px">
+    </div>
+  </section>
+</div>
+<script type="module" src="./js/app.js"></script>
+</body>
+</html>
