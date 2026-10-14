@@ -179,8 +179,8 @@ def compose(spec: LampSpec, mode: str | None = None) -> tuple[np.ndarray, str, d
 
 
 # ---------------------------------------------------------------------------- build
-def build(spec: LampSpec) -> tuple[dict, dict, np.ndarray, dict]:
-    """Returns (parts, modes, preview, meta)."""
+def build(spec: LampSpec, preview_only: bool = False) -> tuple[dict, dict, np.ndarray, dict]:
+    """Returns (parts, modes, preview, meta). ``preview_only`` skips every mesh (fast product images)."""
     geom = spec.geom
     mode, kind = resolve_mode(spec)
     canvas, kind, layout = compose(spec, mode)
@@ -206,6 +206,11 @@ def build(spec: LampSpec) -> tuple[dict, dict, np.ndarray, dict]:
         cols = int(round(spec.frame / spec.pitch))
         t[rim_mask(ny, nx, geom.periodic, rows, cols)] = t_rim
         transmittance = np.exp(-MU_PLA * (t - spec.min_wall))
+        preview = src
+        if preview_only:
+            meta = asdict(spec) | {"mode": mode, "kind": kind, "layout": layout, "warnings": warnings,
+                                   "_transmittance": transmittance}
+            return {}, {}, preview, meta
         shade = shade_from_heightmap(t, geom, relief_in=spec.relief_in)
         if mode == "glow" and len(shade.faces) > 200_000:
             try:  # glow shades are mostly flat: decimation keeps the look, cuts the file 5x
@@ -226,6 +231,15 @@ def build(spec: LampSpec) -> tuple[dict, dict, np.ndarray, dict]:
         nb = 0
         if mode == "cutout":
             polys, nb = raster.add_bridges(polys, spec.bridge_w)
+        if preview_only:
+            preview = raster.rasterize(polys, PPM, geom.arc_len, spec.height)
+            ny, nx = geom.grid_shape(0.5)
+            pm = np.flipud(raster.resample_mask(preview, nx, ny))
+            wall_T = math.exp(-MU_PLA * (spec.wall - spec.min_wall))
+            T = pm + (1.0 - pm) * wall_T if mode == "cutout" else np.full((ny, nx), wall_T) * (1.0 + 0.6 * pm)
+            meta = asdict(spec) | {"mode": mode, "kind": kind, "layout": layout, "warnings": warnings,
+                                   "_transmittance": T}
+            return {}, {}, preview, meta
         if geom.periodic:
             shell = tube(R, spec.wall, spec.height)
         elif geom.shape == "arc":

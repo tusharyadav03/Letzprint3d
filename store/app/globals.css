@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #15110e;
+  --bg-2: #1e1813;
+  --bg-3: #27201a;
+  --line: #312821;
+  --ink: #f1e8da;
+  --ink-2: #b7aa98;
+  --ink-3: #807566;
+  --glow: #f2c57c;
+  --glow-2: #d9a24a;
+  --ember: #8a5a1f;
+  --focus: #f2c57c;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-glow: var(--glow);
+  --color-glow-2: var(--glow-2);
+  --color-ember: var(--ember);
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-poppins);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-poppins), system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.display {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 72;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.05;
+  color: var(--ink);
+}
+
+h1 {
+  font-size: clamp(2.5rem, 6.2vw, 4.6rem);
+}
+h2 {
+  font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+  line-height: 1.1;
+}
+h3 {
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+p {
+  max-width: 62ch;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* the one accent: the lamp's own light */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.35rem;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+.btn-glow {
+  background: var(--glow);
+  color: #1b1408;
+  box-shadow: 0 0 0 0 rgba(242, 197, 124, 0);
+}
+.btn-glow:hover {
+  background: #ffd58f;
+  box-shadow: 0 0 36px 2px rgba(242, 197, 124, 0.28);
+}
+.btn-quiet {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.btn-quiet:hover {
+  border-color: var(--ink-3);
+}
+
+.lamp-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  background: #15110e;
+}
+
+.field {
+  width: 100%;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  font: inherit;
+}
+.field::placeholder {
+  color: var(--ink-3);
+}
+
+.choice {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.7rem 0.9rem;
+  cursor: pointer;
+  background: var(--bg-2);
+  text-align: left;
+}
+.choice[aria-pressed="true"] {
+  border-color: var(--glow);
+  box-shadow: inset 0 0 0 1px var(--glow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

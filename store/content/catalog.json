@@ -1,0 +1,856 @@
+{
+ "generated": "2026-10-14",
+ "prices": {
+  "shade": 29.9,
+  "lamp": 36.9,
+  "photo": 44.9,
+  "name": 24.9,
+  "nfc_stand": 34.9
+ },
+ "categories": {
+  "hindu": "Hindu & Diwali",
+  "christian": "Christian",
+  "islam": "Islamic",
+  "jewish": "Jewish",
+  "buddhist": "Buddhist",
+  "sikh": "Sikh",
+  "bahai": "Baháʼí",
+  "taoist": "Taoist",
+  "shinto": "Shinto",
+  "spiritual": "Spiritual",
+  "love": "Love",
+  "halloween": "Halloween",
+  "christmas": "Christmas",
+  "night": "Night light",
+  "pets": "Pets",
+  "nerd": "Science & nerd",
+  "custom": "Your words"
+ },
+ "groups": {
+  "faith": [
+   "hindu",
+   "christian",
+   "islam",
+   "jewish",
+   "buddhist",
+   "sikh",
+   "bahai",
+   "taoist",
+   "shinto",
+   "spiritual"
+  ],
+  "season": [
+   "halloween",
+   "christmas",
+   "night",
+   "love",
+   "pets"
+  ],
+  "nerd": [
+   "nerd"
+  ],
+  "custom": [
+   "custom"
+  ]
+ },
+ "items": [
+  {
+   "slug": "om",
+   "name": "Om",
+   "category": "hindu",
+   "categoryLabel": "Hindu & Diwali",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/om-glow.webp"
+    }
+   ],
+   "note": "ॐ, Noto Sans Devanagari"
+  },
+  {
+   "slug": "diya",
+   "name": "Diya",
+   "category": "hindu",
+   "categoryLabel": "Hindu & Diwali",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/diya-glow.webp"
+    }
+   ],
+   "note": "oil lamp with flame (Diwali)"
+  },
+  {
+   "slug": "rangoli",
+   "name": "Rangoli",
+   "category": "hindu",
+   "categoryLabel": "Hindu & Diwali",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/rangoli-glow.webp"
+    }
+   ],
+   "note": "8/12-fold petal pattern (Diwali)"
+  },
+  {
+   "slug": "cross",
+   "name": "Cross",
+   "category": "christian",
+   "categoryLabel": "Christian",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/cross-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "ichthys",
+   "name": "Ichthys",
+   "category": "christian",
+   "categoryLabel": "Christian",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/ichthys-glow.webp"
+    }
+   ],
+   "note": "fish outline"
+  },
+  {
+   "slug": "nativity-star",
+   "name": "Nativity Star",
+   "category": "christian",
+   "categoryLabel": "Christian",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/nativity-star-glow.webp"
+    }
+   ],
+   "note": "Bethlehem star (Christmas)"
+  },
+  {
+   "slug": "crescent-star",
+   "name": "Crescent Star",
+   "category": "islam",
+   "categoryLabel": "Islamic",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/crescent-star-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "allah",
+   "name": "Allah",
+   "category": "islam",
+   "categoryLabel": "Islamic",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/allah-glow.webp"
+    }
+   ],
+   "note": "calligraphy, Noto Naskh; text= overrides (e.g. 'بسم الله')"
+  },
+  {
+   "slug": "star-of-david",
+   "name": "Star of David",
+   "category": "jewish",
+   "categoryLabel": "Jewish",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/star-of-david-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "menorah",
+   "name": "Menorah",
+   "category": "jewish",
+   "categoryLabel": "Jewish",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/menorah-glow.webp"
+    }
+   ],
+   "note": "nine-branch hanukkiah"
+  },
+  {
+   "slug": "shalom",
+   "name": "Shalom",
+   "category": "jewish",
+   "categoryLabel": "Jewish",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/shalom-glow.webp"
+    }
+   ],
+   "note": "Hebrew text; text= overrides"
+  },
+  {
+   "slug": "dharma-wheel",
+   "name": "Dharma Wheel",
+   "category": "buddhist",
+   "categoryLabel": "Buddhist",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/dharma-wheel-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "lotus",
+   "name": "Lotus",
+   "category": "buddhist",
+   "categoryLabel": "Buddhist",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/lotus-glow.webp"
+    }
+   ],
+   "note": "line-art lotus"
+  },
+  {
+   "slug": "khanda",
+   "name": "Khanda",
+   "category": "sikh",
+   "categoryLabel": "Sikh",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/khanda-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "ik-onkar",
+   "name": "Ik Onkar",
+   "category": "sikh",
+   "categoryLabel": "Sikh",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/ik-onkar-glow.webp"
+    }
+   ],
+   "note": "ੴ"
+  },
+  {
+   "slug": "bahai-star",
+   "name": "Bahai Star",
+   "category": "bahai",
+   "categoryLabel": "Baháʼí",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/bahai-star-glow.webp"
+    }
+   ],
+   "note": "nine-pointed star"
+  },
+  {
+   "slug": "yin-yang",
+   "name": "Yin Yang",
+   "category": "taoist",
+   "categoryLabel": "Taoist",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/yin-yang-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "torii",
+   "name": "Torii",
+   "category": "shinto",
+   "categoryLabel": "Shinto",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/torii-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "peace",
+   "name": "Peace",
+   "category": "spiritual",
+   "categoryLabel": "Spiritual",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/peace-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "heart",
+   "name": "Heart",
+   "category": "love",
+   "categoryLabel": "Love",
+   "group": "season",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/heart-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "pumpkin",
+   "name": "Pumpkin",
+   "category": "halloween",
+   "categoryLabel": "Halloween",
+   "group": "season",
+   "defaultMode": "cutout",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/pumpkin-glow.webp"
+    },
+    {
+     "mode": "cutout",
+     "image": "/products/pumpkin-cutout.webp"
+    }
+   ],
+   "note": "cut-out = the face"
+  },
+  {
+   "slug": "ghost",
+   "name": "Ghost",
+   "category": "halloween",
+   "categoryLabel": "Halloween",
+   "group": "season",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/ghost-glow.webp"
+    },
+    {
+     "mode": "cutout",
+     "image": "/products/ghost-cutout.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "bat",
+   "name": "Bat",
+   "category": "halloween",
+   "categoryLabel": "Halloween",
+   "group": "season",
+   "defaultMode": "cutout",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/bat-glow.webp"
+    },
+    {
+     "mode": "cutout",
+     "image": "/products/bat-cutout.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "moon-stars",
+   "name": "Moon Stars",
+   "category": "night",
+   "categoryLabel": "Night light",
+   "group": "season",
+   "defaultMode": "cutout",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/moon-stars-glow.webp"
+    },
+    {
+     "mode": "cutout",
+     "image": "/products/moon-stars-cutout.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "snowflake",
+   "name": "Snowflake",
+   "category": "christmas",
+   "categoryLabel": "Christmas",
+   "group": "season",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/snowflake-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "xmas-tree",
+   "name": "Xmas Tree",
+   "category": "christmas",
+   "categoryLabel": "Christmas",
+   "group": "season",
+   "defaultMode": "cutout",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/xmas-tree-glow.webp"
+    },
+    {
+     "mode": "cutout",
+     "image": "/products/xmas-tree-cutout.webp"
+    }
+   ],
+   "note": "cut-out = baubles"
+  },
+  {
+   "slug": "bauble",
+   "name": "Bauble",
+   "category": "christmas",
+   "categoryLabel": "Christmas",
+   "group": "season",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/bauble-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "paw",
+   "name": "Paw",
+   "category": "pets",
+   "categoryLabel": "Pets",
+   "group": "season",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/paw-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "atom",
+   "name": "Atom",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/atom-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "dna",
+   "name": "Dna",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "cutout",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/dna-glow.webp"
+    },
+    {
+     "mode": "cutout",
+     "image": "/products/dna-cutout.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "planet",
+   "name": "Planet",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/planet-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "rocket",
+   "name": "Rocket",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/rocket-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "dice",
+   "name": "Dice",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/dice-glow.webp"
+    },
+    {
+     "mode": "cutout",
+     "image": "/products/dice-cutout.webp"
+    }
+   ],
+   "note": "cut-out = pips"
+  },
+  {
+   "slug": "chess-knight",
+   "name": "Chess Knight",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/chess-knight-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "pixel-heart",
+   "name": "Pixel Heart",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "cutout",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/pixel-heart-glow.webp"
+    },
+    {
+     "mode": "cutout",
+     "image": "/products/pixel-heart-cutout.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "circuit",
+   "name": "Circuit",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "cutout",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/circuit-glow.webp"
+    },
+    {
+     "mode": "cutout",
+     "image": "/products/circuit-cutout.webp"
+    }
+   ],
+   "note": "procedural; seed="
+  },
+  {
+   "slug": "hex-grid",
+   "name": "Hex Grid",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "cutout",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/hex-grid-glow.webp"
+    },
+    {
+     "mode": "cutout",
+     "image": "/products/hex-grid-cutout.webp"
+    }
+   ],
+   "note": "honeycomb, whole panel"
+  },
+  {
+   "slug": "solar-system",
+   "name": "Solar System",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/solar-system-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "fibonacci",
+   "name": "Fibonacci",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/fibonacci-glow.webp"
+    }
+   ],
+   "note": "golden spiral line-art"
+  },
+  {
+   "slug": "controller",
+   "name": "Controller",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/controller-glow.webp"
+    },
+    {
+     "mode": "cutout",
+     "image": "/products/controller-cutout.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "sine",
+   "name": "Sine",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/sine-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "d20",
+   "name": "D20",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/d20-glow.webp"
+    }
+   ],
+   "note": "twenty-sided die"
+  },
+  {
+   "slug": "constellation",
+   "name": "Constellation",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/constellation-glow.webp"
+    }
+   ],
+   "note": "star field + asterism; seed="
+  },
+  {
+   "slug": "spiderweb",
+   "name": "Spiderweb",
+   "category": "halloween",
+   "categoryLabel": "Halloween",
+   "group": "season",
+   "defaultMode": "cutout",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/spiderweb-glow.webp"
+    },
+    {
+     "mode": "cutout",
+     "image": "/products/spiderweb-cutout.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "ankh",
+   "name": "Ankh",
+   "category": "spiritual",
+   "categoryLabel": "Spiritual",
+   "group": "faith",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/ankh-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "radioactive",
+   "name": "Radioactive",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/radioactive-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "omega",
+   "name": "Omega",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/omega-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "pi",
+   "name": "Pi",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/pi-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "infinity",
+   "name": "Infinity",
+   "category": "nerd",
+   "categoryLabel": "Science & nerd",
+   "group": "nerd",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/infinity-glow.webp"
+    }
+   ],
+   "note": ""
+  },
+  {
+   "slug": "music",
+   "name": "Music",
+   "category": "custom",
+   "categoryLabel": "Your words",
+   "group": "custom",
+   "defaultMode": "glow",
+   "variants": [
+    {
+     "mode": "glow",
+     "image": "/products/music-glow.webp"
+    }
+   ],
+   "note": ""
+  }
+ ]
+}
