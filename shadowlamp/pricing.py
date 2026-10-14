@@ -23,6 +23,29 @@ SWAP_SECONDS = 20.0            # P1S + AMS: cut, retract, load, purge, wipe
 PURGE_G_PER_SWAP = 0.35        # with reduced flush volumes; default Bambu flush is worse
 
 MARGIN = {"personalised": 2.5, "catalogue": 2.0, "b2b": 1.6}
+
+
+def _load_calibration():
+    """calibration.json next to this file overrides any of the rates above once real prints are logged."""
+    import json, os
+    path = os.path.join(os.path.dirname(__file__), "calibration.json")
+    if not os.path.exists(path):
+        return
+    try:
+        cal = json.load(open(path, encoding="utf-8"))
+    except Exception:
+        return
+    g = globals()
+    for k, v in cal.items():
+        if k.startswith("_"):
+            continue
+        if k == "RATE_MM3_S" and isinstance(v, dict):
+            RATE_MM3_S.update({kk: float(vv) for kk, vv in v.items()})
+        elif k in g and not isinstance(g[k], dict):
+            g[k] = type(g[k])(v)
+
+
+_load_calibration()
 # fraction of the mesh volume that becomes filament (shades are solid walls; bases print with infill)
 SOLID_FRACTION = {"base": 0.38}
 

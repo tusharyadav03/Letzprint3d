@@ -1,0 +1,9 @@
+{
+  "_comment": "Measured values from the P1S go here; they override shadowlamp/pricing.py. Log real grams and minutes from Bambu Studio for the first 20 prints, then update RATE_MM3_S per mode (mm^3/s), SWAP_SECONDS and PURGE_G_PER_SWAP (AMS), PRINTER_KW, FILAMENT_EUR_PER_G.",
+  "RATE_MM3_S": { "litho": 4.5, "glow": 7.5, "inlay": 7.0, "cutout": 8.5, "base": 14.0 },
+  "SWAP_SECONDS": 20.0,
+  "PURGE_G_PER_SWAP": 0.35,
+  "PRINTER_KW": 0.12,
+  "FILAMENT_EUR_PER_G": 0.022,
+  "KWH_PRICE": 0.18
+}

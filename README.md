@@ -6,7 +6,8 @@ Two generators live here:
   tiles with logo embossing, QR tiles, coloured 3MF export and a print-readiness validator. Defaults now
   assume ø25 mm NTAG inlays (38 mm tiles, magnets on a 16 mm ring).
 * **Shadow Lamp engine** (`shadowlamp/`) — symbol / photo / text → lithophane and shadow lamps with base,
-  preview and production sheet. See [`shadowlamp/README.md`](shadowlamp/README.md).
+  cap, backlit preview and production sheet. See [`shadowlamp/README.md`](shadowlamp/README.md).
+  (The earlier `lamps/` generator was merged into it on 14 Oct 2026; its history is at commit b66f360.)
 
 ---
 

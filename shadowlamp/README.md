@@ -11,12 +11,14 @@ python -m shadowlamp make --theme om --text "शुभ दीपावली" --
 python -m shadowlamp make --image photo.jpg --text "Mia · 2026" --with-base --out out/order-0001
 python -m shadowlamp make --theme pumpkin --mode cutout --out out/pumpkin
 python -m shadowlamp make --theme text --theme-text "Leo|2026" --shape arc --arc 180 --height 80 --out out/leo
+python -m shadowlamp make --theme glyph --theme-text "☥" --bg 0.3 --relief-in --out out/ankh   # any glyph, airy background, smooth outside
 python -m shadowlamp samples --out out/samples [--image photo.jpg]   # the starter set to print first
 ```
 
 Run it on any machine with Python 3.10+ (Windows is fine). Output per job:
-`shade.stl`, `base.stl` (optional), `symbol.stl` (inlay), `print_pack.3mf` (all parts, named — open directly
-in Bambu Studio), `preview.png` (unrolled panel), `production.md/json`.
+`shade.stl`, `base.stl` / `cap.stl` (optional), `symbol.stl` (inlay), `print_pack.3mf` (all parts, named — open
+directly in Bambu Studio), `preview.png` (unrolled panel), `preview_backlit.png` (Beer-Lambert front view, what
+the customer will see), `production.md/json`.
 
 ## Modes
 
@@ -30,7 +32,9 @@ in Bambu Studio), `preview.png` (unrolled panel), `production.md/json`.
 Shapes: `cylinder` (full, seam at the back, image faces +X), `arc` (e.g. 180° wall sconce), `flat` (panel).
 `--repeat N` puts N copies around a cylinder. `--text` adds a name/date band (any script: Devanagari, Arabic,
 Hebrew, Gurmukhi, Latin). `--with-base` adds a base with a groove for the shade and an LED cavity
-(`--led tealight|usb-puck|none`, `--led-dia/--led-depth` to override, `--cable` for a cable slot).
+(`--led tealight|usb-puck|none`, `--led-dia/--led-depth` to override, `--cable` for a cable slot); `--with-cap`
+adds a top ring. `--bg 0.3` lets the background glow a little (airier, faster); `--relief-in` keeps the outside
+smooth; `--feather` fades photo edges into the wall.
 
 ## Print the calibration strip first
 
@@ -56,6 +60,7 @@ shadowlamp/
                bent prisms + manifold booleans
   lamp.py      LampSpec, compose(), build()
   pricing.py   PRD cost formula, AMS swap model, market floors, €/print-hour
+  calibration.json  measured rates override pricing.py — fill after the first real prints
   export.py    STL / 3MF / preview / production sheet
   __main__.py  CLI
   fonts/       bundled OFL fonts + licences
@@ -66,4 +71,6 @@ shadowlamp/
 - Bases only for cylinder shades; arc/flat need a slotted foot (TODO).
 - `inlay` is an honest two-object split; a cheaper two-colour route is a 0.8 mm coloured insert plate (TODO).
 - No browser preview yet — the shop will get a three.js version of `compose()` + the heightmap mesher.
-- Ganesha, Buddha, Hamsa, star maps: not drawn yet (figurative art needs a proper vector, not geometry).
+- Ganesha, Buddha, Hamsa, real star maps ("the sky on your birthday"): not drawn yet.
+- Credits: the Beer-Lambert preview, cap ring, `--bg`, `--relief-in`, d20 / constellation / spiderweb motifs
+  were merged from the parallel `lamps/` generator (commit b66f360).

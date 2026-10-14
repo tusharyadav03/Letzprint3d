@@ -8,10 +8,11 @@ import cv2
 import numpy as np
 
 from . import fonts, raster, themes
-from .mesher import (BaseSpec, ShadeGeom, arc_shell, base as base_mesh, bent_prisms, check,
+from .mesher import (BaseSpec, ShadeGeom, arc_shell, base as base_mesh, bent_prisms, cap as cap_mesh, check,
                      difference, intersection, rim_mask, shade_from_heightmap, tube)
 
-PPM = 8.0  # composition canvas resolution, px per mm
+PPM = 8.0        # composition canvas resolution, px per mm
+MU_PLA = 1.2     # white PLA absorption, 1/mm, for the backlit preview (Beer-Lambert)
 LED_PRESETS = {"tealight": (39.0, 12.0), "usb-puck": (52.0, 10.0), "none": (0.0, 0.0)}
 MODES = ("litho", "glow", "inlay", "cutout")
 
@@ -49,6 +50,10 @@ class LampSpec:
     features: bool = False           # cut/glow only the symbol's holes (face, pips, windows)
     min_bridge: float = 1.2
     bridge_w: float = 1.6
+    bg: float = 0.0                  # glow: background light level 0..1 (0 = full wall, 0.3 = airy)
+    feather: float = 3.0             # photo edge fade into the wall, mm
+    relief_in: bool = False          # relief on the inside, smooth outside
+    with_cap: bool = False           # top ring (cylinder only)
     with_base: bool = False
     led: str = "tealight"
     led_dia: float | None = None
@@ -130,6 +135,14 @@ def compose(spec: LampSpec, mode: str | None = None) -> tuple[np.ndarray, str, d
             if spec.invert:
                 g = 1.0 - g
         tile = raster.fit(g, cw_px, ch_px, spec.fit)
+        if spec.image and spec.feather > 0:
+            f = int(spec.feather * PPM)
+            ramp = np.ones(tile.shape, dtype=np.float32)
+            win = 0.5 - 0.5 * np.cos(np.linspace(0, np.pi, f))
+            ramp[:f, :] *= win[:, None]; ramp[-f:, :] *= win[::-1][:, None]
+            if not geom.periodic:
+                ramp[:, :f] *= win[None, :]; ramp[:, -f:] *= win[::-1][None, :]
+            tile = tile * ramp
         _paste(canvas, tile, cx_canvas, cy_canvas, False, gray=True)
     else:
         m = theme.fn(1400, params)
@@ -188,11 +201,12 @@ def build(spec: LampSpec) -> tuple[dict, dict, np.ndarray, dict]:
         if mode == "litho":
             t = spec.max_wall - (spec.max_wall - spec.min_wall) * g
         else:
-            t = spec.wall - (spec.wall - spec.min_wall) * g
+            t = spec.wall - (spec.wall - spec.min_wall) * np.maximum(g, spec.bg)
         rows = int(round(spec.rim_height / spec.pitch))
         cols = int(round(spec.frame / spec.pitch))
         t[rim_mask(ny, nx, geom.periodic, rows, cols)] = t_rim
-        shade = shade_from_heightmap(t, geom)
+        transmittance = np.exp(-MU_PLA * (t - spec.min_wall))
+        shade = shade_from_heightmap(t, geom, relief_in=spec.relief_in)
         if mode == "glow" and len(shade.faces) > 200_000:
             try:  # glow shades are mostly flat: decimation keeps the look, cuts the file 5x
                 d = shade.simplify_quadric_decimation(face_count=160_000)
@@ -231,6 +245,17 @@ def build(spec: LampSpec) -> tuple[dict, dict, np.ndarray, dict]:
         layout["bridges"] = nb
         layout["cut_polygons"] = len(polys)
         preview = raster.rasterize(polys, PPM, geom.arc_len, spec.height)
+        ny, nx = geom.grid_shape(0.5)
+        pm = np.flipud(raster.resample_mask(preview, nx, ny))
+        wall_T = math.exp(-MU_PLA * (spec.wall - spec.min_wall))
+        transmittance = pm + (1.0 - pm) * wall_T if mode == "cutout" else np.full((ny, nx), wall_T) * (1.0 + 0.6 * pm)
+
+    if spec.with_cap:
+        if geom.shape != "cylinder":
+            warnings.append("cap is only generated for cylinder shades")
+        else:
+            parts["cap"] = cap_mesh(R, t_rim)
+            modes["cap"] = "base"
 
     if spec.with_base:
         if geom.shape != "cylinder":
@@ -251,5 +276,6 @@ def build(spec: LampSpec) -> tuple[dict, dict, np.ndarray, dict]:
 
     ext = layout.get("symbol_v_extent", layout["symbol_band"])
     meta = asdict(spec) | {"mode": mode, "kind": kind, "layout": layout, "warnings": warnings,
-                           "inlay_band_frac": (ext[1] - ext[0]) / spec.height if mode == "inlay" else 0.0}
+                           "inlay_band_frac": (ext[1] - ext[0]) / spec.height if mode == "inlay" else 0.0,
+                           "_transmittance": transmittance}
     return parts, modes, preview, meta

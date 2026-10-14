@@ -1,5 +1,0 @@
-{
-  "_comment": "Measured from real P1S prints. Update after logging actual grams and minutes from Bambu Studio.",
-  "flow_mm3_s": { "lithophane": 4.0, "solid": 9.0 },
-  "printer_kw": 0.12
-}

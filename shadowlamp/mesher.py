@@ -71,28 +71,32 @@ def _quad_faces(ny: int, nx: int, periodic: bool, row_offset: int = 0) -> np.nda
     return np.concatenate([t1, t2])
 
 
-def shade_from_heightmap(t: np.ndarray, geom: ShadeGeom) -> trimesh.Trimesh:
+def shade_from_heightmap(t: np.ndarray, geom: ShadeGeom, relief_in: bool = False) -> trimesh.Trimesh:
     """Build a closed relief shade.
 
     ``t`` is the wall thickness grid in mm, shape (ny, nx), row 0 at the BOTTOM (z = 0),
-    column 0 at u = 0. The inner surface is smooth (radius ``geom.radius`` / plane y = 0);
-    the relief is on the outside. Boundary rows/columns should already be constant
-    (a rim) so the end caps and side walls are planar.
+    column 0 at u = 0. By default the inner surface is smooth (radius ``geom.radius`` /
+    plane y = 0) and the relief is on the outside. With ``relief_in`` the outer surface is
+    smooth at radius + t[0,0] (the rim thickness) and the relief faces inwards. Boundary
+    rows/columns should already be constant (a rim) so end caps and side walls are planar.
     """
     t = np.asarray(t, dtype=np.float64)
     ny, nx = t.shape
     periodic = geom.periodic
     z = np.linspace(0.0, geom.height, ny)
+    t_rim = float(t[0, 0])
 
     if geom.shape == "flat":
         # tangent = -x so that tangent x z = +y = outward (relief faces +Y)
         x = geom.width - np.linspace(0.0, geom.width, nx)
         X = np.broadcast_to(x[None, :], (ny, nx))
         Z = np.broadcast_to(z[:, None], (ny, nx))
-        outer = np.stack([X, t, Z], axis=-1).reshape(-1, 3)
+        y_var = (t_rim - t) if relief_in else t
+        y_flat = t_rim if relief_in else 0.0
+        outer = np.stack([X, y_var, Z], axis=-1).reshape(-1, 3)
         inner = np.stack([
             np.concatenate([x, x]),
-            np.zeros(2 * nx),
+            np.full(2 * nx, y_flat),
             np.concatenate([np.zeros(nx), np.full(nx, geom.height)]),
         ], axis=-1)
     else:
@@ -103,14 +107,19 @@ def shade_from_heightmap(t: np.ndarray, geom: ShadeGeom) -> trimesh.Trimesh:
             theta = -arc / 2.0 + np.linspace(0.0, arc, nx)
         ct, st = np.cos(theta), np.sin(theta)
         R = geom.radius
-        r = R + t
+        if relief_in:
+            r = R + t_rim - t
+            Rs = R + t_rim
+        else:
+            r = R + t
+            Rs = R
         X = r * ct[None, :]
         Y = r * st[None, :]
         Z = np.broadcast_to(z[:, None], (ny, nx))
         outer = np.stack([X, Y, Z], axis=-1).reshape(-1, 3)
         inner = np.stack([
-            np.concatenate([R * ct, R * ct]),
-            np.concatenate([R * st, R * st]),
+            np.concatenate([Rs * ct, Rs * ct]),
+            np.concatenate([Rs * st, Rs * st]),
             np.concatenate([np.zeros(nx), np.full(nx, geom.height)]),
         ], axis=-1)
 
@@ -143,6 +152,8 @@ def shade_from_heightmap(t: np.ndarray, geom: ShadeGeom) -> trimesh.Trimesh:
         faces.append(np.array([[n(0, J), n(1, J), o(ny - 1, J)]]))
 
     mesh = trimesh.Trimesh(vertices=verts, faces=np.concatenate(faces), process=False)
+    if relief_in:
+        mesh.invert()   # the relief surface is now the inside: every face flips
     return mesh
 
 
@@ -214,6 +225,19 @@ def base(spec: BaseSpec, sections: int = 192) -> trimesh.Trimesh:
         box.apply_translation([-(Rb + 2.0) / 2.0 - 0.5, 0.0, hb - c_d + slot_h / 2.0])
         mesh = difference(mesh, [box])
     return mesh
+
+
+def cap(shade_inner_radius: float, shade_rim: float, wall: float = 3.0, rim_h: float = 4.0,
+        plug_h: float = 6.0, clearance: float = 0.25, opening_ratio: float = 0.6,
+        sections: int = 256) -> trimesh.Trimesh:
+    """Top ring: a rim resting on the shade edge plus a short plug that drops inside it,
+    open in the middle so light still exits upward. (Ported from lamps/meshgen.py.)"""
+    r_plug = shade_inner_radius - clearance
+    r_open = r_plug * opening_ratio
+    r_rim = shade_inner_radius + shade_rim + wall
+    prof = [(r_open, 0.0), (r_plug, 0.0), (r_plug, plug_h), (r_rim, plug_h),
+            (r_rim, plug_h + rim_h), (r_open, plug_h + rim_h)]
+    return _revolve_closed(prof, sections)
 
 
 # --------------------------------------------------------------------------- cutters

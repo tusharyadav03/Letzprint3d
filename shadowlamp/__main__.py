@@ -42,6 +42,10 @@ def _add_lamp_args(ap: argparse.ArgumentParser):
     ap.add_argument("--features", action="store_true", help="use only the symbol's holes (face, pips, windows)")
     ap.add_argument("--min-bridge", type=float, default=1.2)
     ap.add_argument("--bridge-w", type=float, default=1.6)
+    ap.add_argument("--bg", type=float, default=0.0, help="glow: background light level 0..1 (0.3 = airy, faster)")
+    ap.add_argument("--feather", type=float, default=3.0, help="photo edge fade mm")
+    ap.add_argument("--relief-in", action="store_true", help="relief on the inside, smooth outside")
+    ap.add_argument("--with-cap", action="store_true", help="top ring (cylinder)")
     ap.add_argument("--with-base", action="store_true")
     ap.add_argument("--led", choices=sorted(__import__("shadowlamp.lamp", fromlist=["LED_PRESETS"]).LED_PRESETS), default="tealight")
     ap.add_argument("--led-dia", type=float)
@@ -60,7 +64,8 @@ def _spec_from(ns) -> LampSpec:
                     rim_height=ns.rim, frame=ns.frame, symbol_frac=ns.symbol_frac, repeat=ns.repeat, text=ns.text,
                     text_height=ns.text_height, text_pos=ns.text_pos, theme_text=ns.theme_text, gamma=ns.gamma,
                     blur_mm=ns.blur, invert=ns.invert, fit=ns.fit, seed=ns.seed, soft_edge_mm=ns.soft_edge,
-                    min_cut=ns.min_cut, features=ns.features, min_bridge=ns.min_bridge, bridge_w=ns.bridge_w, with_base=ns.with_base,
+                    min_cut=ns.min_cut, features=ns.features, min_bridge=ns.min_bridge, bridge_w=ns.bridge_w,
+                    bg=ns.bg, feather=ns.feather, relief_in=ns.relief_in, with_cap=ns.with_cap, with_base=ns.with_base,
                     led=ns.led, led_dia=ns.led_dia, led_depth=ns.led_depth, cable=ns.cable)
 
 
@@ -102,9 +107,10 @@ def main(argv=None):
         jobs = [
             LampSpec(job="calibration-strip", theme="calibration", shape="flat", width=80, height=40, pitch=0.25,
                      min_wall=0.6, max_wall=3.0, rim_height=3.0, frame=3.0),
-            LampSpec(job="om-diwali", theme="om", mode="glow", text="शुभ दीपावली", with_base=True),
+            LampSpec(job="om-diwali", theme="om", mode="glow", text="शुभ दीपावली", with_base=True, with_cap=True),
             LampSpec(job="diya-glow", theme="diya", mode="glow", repeat=3, text="Happy Diwali"),
-            LampSpec(job="cross-inlay", theme="cross", mode="inlay", text="Faith · Hope · Love"),
+            LampSpec(job="cross-inlay", theme="cross", mode="inlay", symbol_frac=0.4),
+            LampSpec(job="spiderweb-cutout", theme="spiderweb", mode="cutout", repeat=2, height=100),
             LampSpec(job="crescent-cutout", theme="crescent-star", mode="cutout", repeat=2),
             LampSpec(job="pumpkin-cutout", theme="pumpkin", mode="cutout", height=100),
             LampSpec(job="atom-glow", theme="atom", mode="glow", text="Harsh"),

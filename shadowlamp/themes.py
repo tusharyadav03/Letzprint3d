@@ -580,6 +580,74 @@ def th_element(S, p):
     return crop(img)
 
 
+def th_d20(S, p):
+    img = _canvas(S)
+    c, R, w = 0.5 * S, 0.44 * S, 0.03 * S
+    hexa = regular_pts(c, c, 6, R, rot=90)
+    polyline(img, hexa, w, closed=True)
+    tri = regular_pts(c, c, 3, R * 0.52, rot=-90)
+    polyline(img, tri, w, closed=True)
+    for (tx, ty) in tri:
+        for (hx, hy) in hexa:
+            if math.hypot(tx - hx, ty - hy) < R * 0.95:
+                polyline(img, [(tx, ty), (hx, hy)], w)
+    lab = fonts.render_text("20", int(S * 0.15))
+    h, ww = lab.shape
+    y0, x0 = int(c + 0.02 * S - h / 2), int(c - ww / 2)
+    img[y0:y0 + h, x0:x0 + ww] = np.maximum(img[y0:y0 + h, x0:x0 + ww], lab)
+    return crop(img)
+
+
+def th_constellation(S, p):
+    img = _canvas(S)
+    rng = np.random.default_rng(int(p.get("seed", 3)))
+    for _ in range(90):
+        x, y = rng.uniform(0.03, 0.97) * S, rng.uniform(0.03, 0.97) * S
+        disc(img, x, y, rng.choice([2.5, 3.5, 4.5, 6.0]) * S / 500)
+    main = [(0.22, 0.25), (0.35, 0.40), (0.50, 0.33), (0.62, 0.48), (0.78, 0.42), (0.70, 0.66), (0.45, 0.72)]
+    pts = [(x * S, y * S) for x, y in main]
+    polyline(img, pts, max(3, int(S * 0.012)))
+    for x, y in pts:
+        poly(img, star_pts(x, y, 4, S * 0.03, S * 0.013))
+    return crop(img)
+
+
+def th_spiderweb(S, p):
+    img = _canvas(S)
+    cx = cy = 0.5 * S
+    lw, R, spokes = max(2, int(S * 0.012)), 0.47 * S, 10
+    angs = [2 * math.pi * k / spokes for k in range(spokes)]
+    for a in angs:
+        polyline(img, [(cx, cy), (cx + R * math.cos(a), cy + R * math.sin(a))], lw)
+    for f in (0.18, 0.34, 0.50, 0.66, 0.82, 0.98):
+        for k in range(spokes):
+            a0, a1 = angs[k], angs[(k + 1) % spokes]
+            am = a0 + math.pi / spokes
+            p0 = (cx + R * f * math.cos(a0), cy + R * f * math.sin(a0))
+            pm = (cx + R * f * 0.92 * math.cos(am), cy + R * f * 0.92 * math.sin(am))
+            p1 = (cx + R * f * math.cos(a1), cy + R * f * math.sin(a1))
+            polyline(img, [p0, pm, p1], lw)
+    sx, sy = cx + 0.30 * S, cy + 0.30 * S
+    polyline(img, [(sx, sy), (cx + 0.18 * S, cy + 0.18 * S)], lw)
+    ellipse(img, sx, sy + 0.01 * S, 0.05 * S, 0.05 * S)
+    disc(img, sx, sy - 0.055 * S, 0.03 * S)
+    for k in range(4):
+        a = math.radians(15 + 25 * k)
+        for sgn in (-1, 1):
+            polyline(img, [(sx, sy), (sx + sgn * 0.11 * S * math.cos(a), sy - 0.11 * S * math.sin(a) + 0.04 * S * k)],
+                     max(2, int(lw * 0.8)))
+    return crop(img)
+
+
+def th_glyph(S, p):
+    """Any single character (or short string) from the bundled fonts: --theme glyph --theme-text ☥"""
+    return text_mask(p.get("text") or "★", S)
+
+
+def _glyph(ch):
+    return lambda S, p: text_mask(ch, S)
+
+
 # ---------------------------------------------------------------------------- grayscale (lithophane) themes
 def th_mandelbrot(S, p):
     """Smooth escape-time Mandelbrot. Dark set, glowing halo. text='cx,cy,width' overrides the view."""
@@ -707,6 +775,16 @@ _reg("solar-system", "nerd", th_solar_system)
 _reg("fibonacci", "nerd", th_fibonacci, note="golden spiral line-art")
 _reg("controller", "nerd", th_controller, cutout_features=True)
 _reg("sine", "nerd", th_sine)
+_reg("d20", "nerd", th_d20, note="twenty-sided die")
+_reg("constellation", "nerd", th_constellation, note="star field + asterism; seed=")
+_reg("spiderweb", "halloween", th_spiderweb, default_mode="cutout")
+_reg("ankh", "spiritual", _glyph("☥"))
+_reg("radioactive", "nerd", _glyph("☢"))
+_reg("omega", "nerd", _glyph("Ω"))
+_reg("pi", "nerd", _glyph("π"))
+_reg("infinity", "nerd", _glyph("∞"))
+_reg("music", "custom", _glyph("♫"))
+_reg("glyph", "custom", th_glyph, note="any character from the bundled fonts: --theme-text ☥")
 _reg("text", "custom", th_text, note="any text/script; use | for a second line")
 _reg("element", "nerd", th_element, note="periodic tile: text='Ha|Harsh|118'")
 _reg("mandelbrot", "nerd", th_mandelbrot, kind="gray", default_mode="litho", note="text='cx,cy,width' view")
