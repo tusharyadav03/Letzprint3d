@@ -42,6 +42,11 @@ def check(path: Path, opts) -> dict:
     m = trimesh.load_mesh(path, process=False)
     if isinstance(m, trimesh.Scene):
         m = trimesh.util.concatenate([g for g in m.geometry.values()])
+    # STL stores every triangle with its own three vertices, so without a
+    # merge pass every edge looks open and every file reports "not closed".
+    # Merging exact duplicates restores the shared topology without moving
+    # a single vertex; real gaps survive the merge and are still reported.
+    m.merge_vertices()
 
     res = {"file": path.name}
     res["triangles"] = int(len(m.faces))
