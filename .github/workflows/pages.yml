@@ -1,5 +1,6 @@
 # Builds the static store and publishes it to GitHub Pages.
-# One-time setup on GitHub: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+# Enables Pages itself on first run (actions/configure-pages enablement). If that is refused, do it by hand:
+# Settings → Pages → Build and deployment → Source: "GitHub Actions".
 # The site then lives at https://<owner>.github.io/<repo>/ (custom domain: Settings → Pages → Custom domain).
 name: store-pages
 
@@ -26,6 +27,9 @@ jobs:
         working-directory: store
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true     # switches Pages on for the repo the first time
       - uses: actions/setup-node@v4
         with:
           node-version: 22
