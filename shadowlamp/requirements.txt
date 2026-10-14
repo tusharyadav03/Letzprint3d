@@ -1,0 +1,12 @@
+numpy>=1.26
+trimesh>=4.4
+manifold3d>=2.5
+triangle>=20230923
+shapely>=2.0
+opencv-python-headless>=4.9
+pillow>=10.0
+fonttools>=4.50
+fast-simplification>=0.1.9
+lxml>=5.0
+networkx>=3.0
+scipy>=1.12

@@ -56,19 +56,21 @@ export const ICONS = [
 // ---------------------------------------------------------------------------
 // Shared hardware constants — these drive fit, so they are grouped separately.
 // ---------------------------------------------------------------------------
-// A 30 mm tile cannot hold a 25 mm inlay AND magnets side by side — the
-// magnet ring would land inside the antenna pocket. An 18 mm round NTAG213
-// with 4 × ø4 magnets on a 12.2 mm ring clears it with ~1 mm to spare.
+// Stock on hand (Oct 2026) is ø25 mm NTAG inlays. A 30 mm tile cannot hold a
+// 25 mm inlay AND magnets side by side, so the default tile is 38 mm with the
+// 4 × ø4 magnets on a 16 mm ring (diagonals): 1.15 mm wall to the antenna
+// pocket, 1.0 mm to the tile edge on-axis, 5+ mm on the diagonal.
+// With 18 mm tags you can go back to tileSize 30 / magnetRing 12.2.
 // Change these in the Hardware group if you source different parts.
 export const HARDWARE = {
-  nfcTagDia:      18.0,
+  nfcTagDia:      25.0,
   nfcTagThick:    0.55,
   nfcClearance:   0.35,
   magnetDia:      4.0,
   magnetThick:    1.5,
   magnetClear:    0.15,
   magnetCount:    4,
-  magnetRing:     12.2,
+  magnetRing:     16.0,
   screwDia:       3.2,   // wall mount
   screwHeadDia:   6.4,
   batteryDia:     20.0,  // CR2032 for lightbox
@@ -260,7 +262,7 @@ export const PARAM_DEFS = {
 const barBase = {
   // Proportions taken from the Tap Bar product photography: a shallow tray
   // with a tall sign panel, tiles standing proud near the front edge.
-  tileCount: 4, tileSize: 30, tileThickness: 5, tileRadius: 7, tileGap: 4,
+  tileCount: 4, tileSize: 38, tileThickness: 5, tileRadius: 7, tileGap: 4,
   tileSeatDepth: 1.4, tileFit: 0.25, sideMargin: 8, tileRowZ: 4,
   trayDepth: 46, trayHeight: 12, cornerRadius: 4,
   panelHeight: 46, panelThickness: 8, panelLean: 2, panelCornerRadius: 9,
@@ -280,7 +282,7 @@ const baseBase = { ...barBase, panelHeight: 0, trayHeight: 10, trayDepth: 42,
                    sideMargin: 7, logoScale: 0, straplineWidth: 0.45 };
 
 const boardBase = {
-  tileCount: 4, tileSize: 30, tileThickness: 5, tileRadius: 7, tileGap: 4,
+  tileCount: 4, tileSize: 38, tileThickness: 5, tileRadius: 7, tileGap: 4,
   tileSeatDepth: 1.4, tileFit: 0.25, sideMargin: 8, tileRowOffset: -22,
   plateThickness: 8, boardHeight: 78, cornerRadius: 7, edgeChamfer: 0.8,
   mountMode: 0, keyholeInset: 12, adhesiveRecess: 0.6,
@@ -317,7 +319,7 @@ export const PRODUCTS = {
     name: 'Tap Bar QR', family: 'bar', price: 'S$109', branded: true, qrSlot: true,
     blurb: 'NFC + QR hybrid. One taps, one scans. Best for payments.',
     parts: ['body', 'tiles', 'logo', 'icons'],
-    params: { ...barBase, tileCount: 2, tileSize: 34, sideMargin: 10 }
+    params: { ...barBase, tileCount: 2, tileSize: 38, sideMargin: 10 }
   },
   'tapbar-max': {
     name: 'Tap Bar Max', family: 'bar', price: 'S$149', branded: true,
@@ -368,7 +370,7 @@ export const PRODUCTS = {
     blurb: 'A single customisable NFC tile — your colour, icon, and link.',
     parts: ['tiles', 'icons', 'logo'],
     params: {
-      tileSize: 30, tileThickness: 4, tileRadius: 6, faceChamfer: 0.5,
+      tileSize: 38, tileThickness: 4, tileRadius: 6, faceChamfer: 0.5,
       nfcTagDia: 18, nfcPocketDepth: 1.1, magnetDia: 4, magnetThick: 1.5,
       magnetCount: 4, magnetRing: 12.2, lidThickness: 1.0,
       iconScale: 18, iconDepth: 0.7, logoScale: 14, logoOffsetX: 0,

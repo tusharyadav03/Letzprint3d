@@ -7,3 +7,9 @@ lamps/out/
 out/
 __pycache__/
 *.pyc
+
+# shadowlamp outputs
+out/
+*.stl
+*.3mf
+__pycache__/

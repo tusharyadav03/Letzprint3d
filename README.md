@@ -1,3 +1,15 @@
+# Letzprint3d — production tools
+
+Two generators live here:
+
+* **Tap Studio** (`index.html`, `js/`, `cad/`, `blender/`, `validate/`) — parametric NFC stands, boards and
+  tiles with logo embossing, QR tiles, coloured 3MF export and a print-readiness validator. Defaults now
+  assume ø25 mm NTAG inlays (38 mm tiles, magnets on a 16 mm ring).
+* **Shadow Lamp engine** (`shadowlamp/`) — symbol / photo / text → lithophane and shadow lamps with base,
+  preview and production sheet. See [`shadowlamp/README.md`](shadowlamp/README.md).
+
+---
+
 # Tap Studio — internal 3D production pipeline
 
 An in-house tool, not a shopfront. You pick a product, drop in a customer's
@@ -198,8 +210,8 @@ supply the official artwork.
 
 The defaults assume:
 
-- **NFC:** ø18 mm round NTAG213 inlay, 0.55 mm thick
-- **Magnets:** 4 × ø4 × 1.5 mm N35, on a 12.2 mm ring
+- **NFC:** ø25 mm round NTAG inlay, 0.55 mm thick (stock on hand; 18 mm also supported)
+- **Magnets:** 4 × ø4 × 1.5 mm N35, on a 16 mm ring, 38 mm tiles
 - **Wall mount:** M3 screws, ø6.4 mm heads
 
 The tag size matters more than it looks. A 30 mm tile physically cannot hold a
